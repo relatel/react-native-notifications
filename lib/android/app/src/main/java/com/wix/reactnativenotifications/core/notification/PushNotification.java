@@ -63,11 +63,13 @@ public class PushNotification implements IPushNotification {
     }
 
     @Override
-    public void onReceived() throws InvalidNotificationException {
-        if (!mAppLifecycleFacade.isAppVisible()) {
+    public void onReceived() {
+        ReactContext reactContext = mAppLifecycleFacade.getRunningReactContext();
+        boolean hasActiveCatalystInstance = reactContext != null && reactContext.hasActiveCatalystInstance();
+        if (!mAppLifecycleFacade.isAppVisible() || !hasActiveCatalystInstance) {
             postNotification(null);
-            notifyReceivedBackgroundToJS();
-        } else {
+        }
+        if (hasActiveCatalystInstance) {
             notifyReceivedToJS();
         }
     }
@@ -130,15 +132,11 @@ public class PushNotification implements IPushNotification {
     }
 
     protected void dispatchUponVisibility() {
-        mAppLifecycleFacade.addVisibilityListener(getIntermediateAppVisibilityListener());
+        mAppLifecycleFacade.addVisibilityListener(mAppVisibilityListener);
 
         // Make the app visible so that we'll dispatch the notification opening when visibility changes to 'true' (see
         // above listener registration).
         launchOrResumeApp();
-    }
-
-    protected AppVisibilityListener getIntermediateAppVisibilityListener() {
-        return mAppVisibilityListener;
     }
 
     protected Notification buildNotification(PendingIntent intent) {
