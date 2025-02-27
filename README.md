@@ -37,6 +37,19 @@ Apps using React Native Notifications may target iOS 10 and Android 5.0 (API 21)
 
 _Upcoming: local notifications, background-state Rx queue (iOS equivalent)_
 
+Build and release
+-----------------
+To build the project for release run command
+
+``` sh
+npm run build
+```
+OR
+``` sh
+yarn prestart
+```
+This will build the `/dist` distination DO NOT run `Yarn build` as its scripted to remove `/dist`
+
 # Quick Links
 
 - [Getting Started](https://wix.github.io/react-native-notifications/docs/getting-started)
